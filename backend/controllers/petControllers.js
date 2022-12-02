@@ -10,8 +10,28 @@ var petCollection = [
 const getPets = (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Pet found!",
+    message: "Success",
     data: petCollection,
+  });
+};
+//          Get pets
+// ROUTE    GET /api/pets/:id
+const getPetsById = (req, res) => {
+  const id = req.params.id * 1;
+  const pet = petCollection.find((p) => p.id === id);
+
+  if (!pet) {
+    return res.status(400).json({
+      status: "failed",
+      message: "Unable to find pet-ID",
+    });
+  }
+  res.status(200).json({
+    status: "success",
+    message: "Pet found",
+    data: {
+      users: pet,
+    },
   });
 };
 
@@ -29,13 +49,30 @@ const setPet = (req, res) => {
 //          Update pets
 // ROUTE    PUT /api/pets
 const updatePets = (req, res) => {
-  res.status(200).json({ message: `Update pet ${req.params.id}` });
+  const petId = req.params.id;
+
+  const petName = req.body.name;
+
+  const newPet = {
+    id: petId,
+    petName,
+  };
+  const petIndex = petCollection.findIndex((p) => p.id == petId);
+  petCollection[petIndex] = newPet;
+
+  if (req.params.id * 1 > petCollection.length)
+    return res.status(400).json({
+      status: "failed",
+      data: {
+        pet: newPet,
+      },
+    });
 };
 
 //          Delete pets
 // ROUTE    delete /api/pets/:id
 const deletePets = (req, res) => {
-  res.status(200).json({ message: `Delete pet ${req.params.id}` });
+  /*   res.status(200).json({ message: `Delete pet ${req.params.id}` }); */
 };
 
 module.exports = {
@@ -43,4 +80,5 @@ module.exports = {
   setPet,
   updatePets,
   deletePets,
+  getPetsById,
 };

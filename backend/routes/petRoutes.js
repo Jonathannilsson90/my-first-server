@@ -3,12 +3,13 @@ const router = express.Router()
 const {getPets,
     setPet,
     updatePets,
-    deletePets
+    deletePets,
+    getPetsById,
 } = require('../controllers/petControllers')
 
 
 router.route('/').get(getPets).post(setPet)
 
-router.route('/:id').put(updatePets).delete(deletePets)
+router.route('/:id').put(updatePets).delete(deletePets).get(getPetsById)
 
 module.exports = router
